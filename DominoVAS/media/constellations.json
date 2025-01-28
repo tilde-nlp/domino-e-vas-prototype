@@ -1,0 +1,84 @@
+{
+    "constellations": [
+      {
+        "constellation": "SENTINEL-1",
+        "description-short": "Radar imaging for land and ocean monitoring.",
+        "description-long": "The Sentinel-1 mission is the European Radar Observatory for the Copernicus joint initiative of the European Commission (EC) and the European Space Agency (ESA). The Sentinel-1 mission includes C-band imaging operating in four exclusive imaging modes with different resolution (down to 5 m) and coverage (up to 400 km). It provides dual polarization capability, short revisit times and rapid product delivery. Additionally, precise measurements of spacecraft position and attitude are available for every observation [https://dataspace.copernicus.eu/explore-data/data-collections/sentinel-data/sentinel-1].",
+        "satellites": [
+          "SENTINEL-1A",
+          "SENTINEL-1B"
+        ],
+        "downloadStations": [
+          "KIR", "MTR", "SVL", "TRL"
+        ]
+      },
+      {
+        "constellation": "SENTINEL-2",
+        "description-short": "Multispectral imaging for land monitoring.",
+        "description-long": "The Copernicus Sentinel-2 mission consists of two polar-orbiting satellites that are positioned in the same sun-synchronous orbit, with a phase difference of 180°. It aims to monitor changes in land surface conditions. The satellites have a wide swath width (290 km) and a high revisit time. Sentinel-2 is equipped with an optical instrument payload that samples 13 spectral bands: four bands at 10 m, six bands at 20 m and three bands at 60 m spatial resolution [https://dataspace.copernicus.eu/explore-data/data-collections/sentinel-data/sentinel-2]",
+        "satellites": [
+          "SENTINEL-2A",
+          "SENTINEL-2B"
+        ],
+        "downloadStations": [
+          "KIR", "MTR", "SVL", "TRL"
+        ]
+      },
+      {
+        "constellation": "SENTINEL-3",
+        "description-short": "Sea-surface topography, temperature, and ocean color.",
+        "description-long": "Sentinel-3 is a constellation of two radar imaging satellites developed to support Copernicus ocean, land, atmospheric, emergency, security and cryospheric applications. Both S3A, launched in February 2016, and S3B, launched in April 2018, are part of the Copernicus Programme- the European Union’s Earth observation program, managed by the European Commission (COM) [https://www.eoportal.org/satellite-missions/copernicus-sentinel-3]. The spacecraft carries four main instruments: OLCI (Ocean and Land Colour Instrument), SLSTR (Sea and Land Surface Temperature Instrument), SRAL (SAR Radar Altimeter) and MWR (Microwave Radiometer). The SENTINEL-3 mission is jointly operated by the European Space Agency (ESA) and supported by EUMETSAT (European Organisation for the Exploitation of Meteorological Satellites) [https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-3]",
+        "satellites": [
+          "SENTINEL-3A",
+          "SENTINEL-3B"
+        ],
+        "downloadStations": [
+          "KIR", "SVL", "ASC"
+        ]
+      },
+      {
+        "constellation": "SENTINEL-4",
+        "description-short": "Atmospheric monitoring from a geostationary orbit.",
+        "description-long": "Atmospheric monitoring from a geostationary orbit.",
+        "satellites": [
+          "SENTINEL-4"
+        ],
+        "downloadStations": [
+          "KIR", "SVL"
+        ]
+      },
+      {
+        "constellation": "SENTINEL-5",
+        "description-short": "Atmospheric monitoring from a polar orbit.",
+        "description-long": "Landsat-5 was launched on 1 March 1984 and the mission ended on 5 June 2013. It launched the Thematic Mapper (TM) which was a multispectral scanning radiometer operating in the visible and Infra-Red regions of the Electromagnetic Spectrum. It was characterized by 185 km swath width and 30 m resolution for visible (VIS), near infrared (NIR) and shortwave infrared (SWIR) while 120 m resolution for thermal infrared. The acquired Landsat TM scene covers approximately 183 x 172.8 km. The objective of Landsat-5 and any other Landsat mission was to image repetitively Earth's land and coastal areas with the aim of monitoring changes to those areas over time [https://creodias.eu/eodata/landsat-5/].",
+        "satellites": [
+          "SENTINEL-5"
+        ],
+        "downloadStations": [
+          "KIR", "SVL"
+        ]
+      },
+      {
+        "constellation": "SENTINEL-5P",
+        "description-short": "Trace gases and aerosols monitoring.",
+        "description-long": "The Copernicus Sentinel-5 Precursor mission dedicated to monitoring our atmosphere, consists of one satellite carrying the TROPOspheric Monitoring Instrument (TROPOMI) instrument. It aims to fill in global atmospheric data gap between the retired ENVISAT and AURA missions and the upcoming Sentinel-5 mission. The primary goal of TROPOMI is to provide daily global observations of key atmospheric constituents related to monitoring and forecasting air quality, the ozone layer, and climate change [https://dataspace.copernicus.eu/explore-data/data-collections/sentinel-data/sentinel-5p]",
+        "satellites": [
+          "SENTINEL-5P"
+        ],
+        "downloadStations": [
+          "KIR", "SVL"
+        ]
+      },
+      {
+        "constellation": "SENTINEL-6",
+        "description-short": "Sea-surface height measurement using radar altimeter.",
+        "description-long": "The Sentinel-6 mission represents a groundbreaking advancement in Earth observation, providing invaluable insights for scientists, environmentalists, and stakeholders worldwide. At the heart of this mission is the cutting-edge radar altimeter instrument, designed to measure sea surface height and monitor key oceanographic parameters with unparalleled accuracy. The Sentinel-6 satellite collects precise data by employing advanced radar technology, allowing for a comprehensive understanding of sea level variations, ocean currents, and climate patterns [https://creodias.eu/eodata/sentinel-6/].",
+        "satellites": [
+          "SENTINEL-6"
+        ],
+        "downloadStations": [
+          "KIR", "SVL", "ASC"
+        ]
+      }
+    ]
+  }

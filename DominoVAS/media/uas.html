@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domino-E VA</title>
+
+    <!-- Mapbox GL JS and Mapbox Draw -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css"
+        rel="stylesheet" />
+    <script
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.3/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.3/mapbox-gl-geocoder.css"
+        type="text/css">
+    <script crossorigin="anonymous" src="webchat.js"
+        defer></script>
+
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        .map-container {
+            width: 70%;
+            height: 100%;
+            background-color: #f5f7fa;
+            background: url('Domino-e-BG.jpg');
+            /* Initially hidden until button is clicked */
+        }
+
+        .tools-container {
+            width: 25%;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            border-left: 1px solid #ddd;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px 0;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            font-size: 14px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .top-right-button {
+            position: absolute;
+            top: 3px;
+            right: 10px;
+            padding: 10px 15px;
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 1px;
+            cursor: pointer;
+            z-index: 1000;
+            font-size: 14px;
+        }
+
+        .top-right-button:hover {
+            background-color: rgb(243, 242, 241);
+        }
+
+        #webchat {
+            width: 30% !important;
+            padding-top: 62px;
+            background-color: black;
+            box-shadow: inset 0px 60px 0px 0px black, inset 0px 61px 0px 0px #ccc;
+        }
+
+        body.fullscreen #search-bar {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 99999;
+            display: block;
+            /* Ensure it's visible when fullscreen is active */
+        }
+
+        body:not(.fullscreen) #search-bar {
+            display: none;
+            /* Hide the search bar when not in fullscreen */
+        }
+
+        #webchat a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .webchat__render-markdown__external-link-icon {
+            filter: brightness(0) invert(1);
+        }
+
+        .webchat__bubble__content {
+            padding: 10px;
+        }
+    </style>
+    <style>
+        /* Custom styles for HeroCard buttons */
+        .webchat__adaptive-card-renderer .ac-pushButton {
+            background-color: transparent !important;
+            color: white !important;
+            border: none;
+            padding: 10px 20px !important;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 500 !important;
+            font-size: 14px;
+        }
+
+        /* Hover effect for the HeroCard buttons */
+        .webchat__adaptive-card-renderer .ac-pushButton:hover {
+            border: none;
+            box-shadow: 0 0 5px rgba(109, 111, 112, 0.26);
+        }
+
+        /* Focus effect for the HeroCard buttons */
+        .webchat__adaptive-card-renderer .ac-pushButton:focus {
+            outline: none;
+            border: none;
+            box-shadow: 0 0 5px rgba(109, 111, 112, 0.26);
+        }
+
+        /* Active button style when clicked */
+        .webchat__adaptive-card-renderer .ac-pushButton:active {
+            border: none;
+            box-shadow: 0 0 5px rgba(109, 111, 112, 0.26);
+        }
+
+        button.webchat__suggested-action {
+            height: 28px !important;
+            margin-left: 15px;
+        }
+
+        .ac-pushButton {
+            margin: 2px;
+        }
+
+        .ac-adaptiveCard {
+            background: rgb(31 35 40) !important;
+        }
+
+        .ac-fact-title {
+            min-width: 150px !important
+        }
+
+        /* Base style for the button */
+        /* Base style for the button */
+        .ac-pushButton.expandable {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            position: relative;
+            border: none !important;
+            justify-content: start !important;
+            padding-left: 0 !important;
+            border-top: 1px solid #ccc !important;
+            border-radius: 0;
+        }
+
+
+        /* Expanded state (button down) */
+        .ac-pushButton.expandable.expanded {
+            transform: translateY(2px);
+        }
+
+        /* Collapsed state (button up) */
+        .ac-pushButton.expandable {
+            transform: translateY(-2px);
+        }
+
+        /* Icon styles using ::after */
+        .ac-pushButton.expandable::after {
+            content: "▼";
+            /* Default icon for "down" */
+            font-size: 14px;
+            color: #ffffff;
+            margin-left: 8px;
+            margin-top: -3px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Rotate icon for "expanded" state */
+        .ac-pushButton.expandable.expanded::after {
+            content: "▲";
+            /* Icon for "up" */
+        }
+    </style>
+    <style>
+        #map.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 70%;
+            height: 100%;
+            z-index: 9999;
+            background-color: #fff;
+        }
+
+        #map:after {
+            content: '🔍 Expand';
+            position: absolute;
+            top: 0px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+            margin: 10px;
+        }
+
+        #map.fullscreen:after {
+            content: '❌ Collapse';
+        }
+
+        .mapboxgl-ctrl-bottom-right {
+            display: none;
+        }
+
+        .mapboxgl-ctrl-top-right {
+
+            top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="top-right-button" id="clearChatButton"
+        onclick="clearChat();command_from_bot_to_page('map:close');document.body.classList.remove('fullscreen');const mapElement = document.getElementById('map');if (mapElement) {mapElement.remove();}">Clear
+        Chat</button>
+    <div id="search-bar"></div>
+    <!-- Map Container -->
+    <div id="map2" class="map-container"></div>
+    <!-- Tools Container -->
+    <div class="tools-container" id="webchat">
+
+    </div>
+
+    <script>
+        function initializeFullscreenToggle(mapElement) {
+            if (!mapElement) {
+                console.error('Map element not found!');
+                return;
+            }
+
+            // Add a click event listener for toggling fullscreen
+            mapElement.addEventListener('click', (event) => {
+                // Check if the click is on the pseudo-element (e.g., button to expand)
+                const mapRect = mapElement.getBoundingClientRect();
+                const x = event.clientX - mapRect.left;
+                const y = event.clientY - mapRect.top;
+
+                // Assuming the pseudo-element is positioned in the top-right corner
+                const isInPseudoElement =
+                    x > mapRect.width - 100 && // width of the pseudo-element area
+                    y < 40; // height of the pseudo-element area
+
+                if (isInPseudoElement) {
+                    mapElement.classList.toggle('fullscreen');
+                    document.body.classList.toggle('fullscreen');
+
+                    // If map is exiting fullscreen, remove the 'fullscreen' class from the body
+                    if (!mapElement.classList.contains('fullscreen')) {
+                        document.body.classList.remove('fullscreen');
+                    }
+                }
+
+                // Resize the map to fit the new dimensions (Mapbox specific)
+                if (map) {
+                    map.resize();
+                }
+            });
+        }
+        let map, draw, userMarker;
+        function command_from_bot_to_page(command) {
+            if (command == 'map:open') {
+                if (map) {
+                    // Remove geocoder search box
+                    const searchBar = document.getElementById('search-bar');
+                    if (searchBar) {
+                        searchBar.innerHTML = ''; // Clear the search bar content
+                    }
+                    // Remove all features and controls from the map
+                    if (draw) { draw.deleteAll(); } // Clears all drawn features if Mapbox Draw is used
+                    map.remove(); // Removes the map instance
+
+
+                    map = null; // Clear the map instance
+                    const elementsToRemove = document.querySelectorAll('.data-fullscreen-initialized');
+
+                    // Iterate through each element and remove it
+                    elementsToRemove.forEach((element) => {
+                        element.remove();
+                    });
+
+                    document.body.classList.remove('fullscreen');
+                }
+
+                let mapElement = document.getElementById('map');
+                mapElement.style.display = 'block';
+                mapElement.classList.add('data-fullscreen-initialized');
+                // Initialize Mapbox
+                mapboxgl.accessToken = 'pk.eyJ1IjoiZXZpdGFrb3JuZWpldmEiLCJhIjoiY2w1Zmtzc2V1MWM3ODNtb2V0ZG5taGRyMiJ9.R5AdSmfczNwVQ-ThE_QRtg';
+                map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: [0, 0], // Starting position [lng, lat]
+                    zoom: 1, // Initial zoom level
+                    projection: 'globe' // Enable globe projection
+                });
+                // Add atmosphere effects
+                map.on('style.load', () => {
+                    map.setFog({
+                        range: [0.5, 10],
+                        color: 'white',
+                        "horizon-blend": 0.3
+                    });
+                });
+                // Add navigation controls (zoom and compass)
+                map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+                // Initialize Mapbox Draw
+                draw = new MapboxDraw({
+                    displayControlsDefault: false, // Disable default controls
+                    controls: {
+                        polygon: true, // Enable polygon drawing
+                        line_string: true, // Enable line drawing
+                        point: true, // Enable point placement
+                        trash: true, // Enable delete control
+                        combine_features: true, // Enable combining features
+                        uncombine_features: true // Enable un-combining features
+                    }
+                });
+
+                // Add draw control to the map
+                map.addControl(draw);
+                // Add location search toolbar (Geocoder Control)
+                const geocoder = new MapboxGeocoder({
+                    accessToken: mapboxgl.accessToken,
+                    marker: {
+                        color: 'orange'
+                    },
+                    mapboxgl: mapboxgl
+                });
+
+                document.getElementById('search-bar').appendChild(geocoder.onAdd(map));
+                // Move to user location
+                /*if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        const userLng = position.coords.longitude;
+                        const userLat = position.coords.latitude;
+
+                        if (userMarker) {
+                            userMarker.remove();
+                        }
+
+                        userMarker = new mapboxgl.Marker()
+                            .setLngLat([userLng, userLat])
+                            .addTo(map);
+
+                        map.flyTo({ center: [userLng, userLat], zoom: 12 });
+                    });
+                } else {
+                    command_from_page_to_bot('Geolocation is not supported by your browser.');
+                }*/
+
+                map.on('draw.create', function (e) {
+                    /*Triggered when a user finishes creating a new feature (point, line, or polygon).
+                        Example: When the user completes drawing a polygon.*/
+                    const features = e.features;
+                    if (features.length > 0) {
+                        const geojson = {
+                            type: 'FeatureCollection',
+                            features: features
+                        };
+                        command_from_page_to_bot("draw:create:" + JSON.stringify(geojson, null, 2).replaceAll("\n", ""));
+                    }
+                });
+
+                map.on('draw.delete', function (e) {
+                    // Triggered when a user deletes one or more features using the trash control.
+                    const features = e.features;
+                    if (features.length > 0) {
+                        const geojson = {
+                            type: 'FeatureCollection',
+                            features: features
+                        };
+                        command_from_page_to_bot("draw:delete:" + JSON.stringify(geojson, null, 2).replaceAll("\n", ""));
+                    }
+                });
+
+                map.on('draw.update', function (e) {
+                    // Triggered when a user updates an existing feature (e.g., moves a vertex, reshapes a polygon).
+                    const features = e.features;
+                    if (features.length > 0) {
+                        const geojson = {
+                            type: 'FeatureCollection',
+                            features: features
+                        };
+                        command_from_page_to_bot("draw:update:" + JSON.stringify(geojson, null, 2).replaceAll("\n", ""));
+                    }
+                });
+
+                map.on('draw.selectionchange', function (e) {
+                    // Triggered when the selected features change, such as when a user selects or deselects a feature.
+                    const features = e.features;
+                    if (features.length > 0) {
+                        const geojson = {
+                            type: 'FeatureCollection',
+                            features: features
+                        };
+                        //command_from_page_to_bot("draw:selectionchange:" + JSON.stringify(geojson, null, 2).replaceAll("\n", ""));
+                    }
+                });
+
+                map.on('draw.modechange', function (e) {
+                    // Triggered when the draw mode changes, such as switching between drawing a polygon and editing a feature.
+                    const newMode = e.mode;
+                    // command_from_page_to_bot("draw:modechange:" + newMode);
+                });
+
+                map.on('draw.combine', function (e) {
+                    // Triggered when a user combines multiple features into one (e.g., combining polygons).
+                    const features = e.features;
+                    const geojson = {
+                        type: 'FeatureCollection',
+                        features: features
+                    };
+                    //command_from_page_to_bot("draw:combine:" + JSON.stringify(geojson, null, 2).replaceAll("\n", ""));
+                });
+
+                map.on('draw.uncombine', function (e) {
+                    // Triggered when a user separates combined features back into individual features.
+                    const features = e.features;
+                    const geojson = {
+                        type: 'FeatureCollection',
+                        features: features
+                    };
+                    //command_from_page_to_bot("draw:uncombine:" + JSON.stringify(geojson, null, 2).replaceAll("\n", ""));
+                });
+                // Handle location selection from the search bar (Geocoder result)
+                geocoder.on('result', function (e) {
+                    const selectedLocation = e.result; // This contains the location details
+
+                    // Extract latitude, longitude, and position text from the selected location
+                    const lng = selectedLocation.geometry.coordinates[0];
+                    const lat = selectedLocation.geometry.coordinates[1];
+                    const positionText = selectedLocation.place_name;
+
+                    // Send location details (latitude, longitude, and position text) to the bot
+                    command_from_page_to_bot(`location:selected:${positionText} - Latitude: ${lat}, Longitude: ${lng}`);
+                });
+                initializeFullscreenToggle(mapElement);
+                command_from_page_to_bot("map:opened");
+            }
+            if (command == 'zoomin') {
+                if (map) {
+                    const currentZoom = map.getZoom();
+                    map.setZoom(currentZoom + 1); // Zoom in by 1 level
+                    command_from_page_to_bot("zoom:zoomed-in");
+                } else {
+                    command_from_page_to_bot("message:Map is not initialized");
+                }
+            }
+            if (command == 'zoomout') {
+                if (map) {
+                    const currentZoom = map.getZoom();
+                    map.setZoom(currentZoom - 1); // Zoom in by 1 level
+                    command_from_page_to_bot("zoom:zoomed-out");
+                } else {
+                    command_from_page_to_bot("message:Map is not initialized");
+                }
+            }
+            if (command.startsWith("map:drawPolygon:")) {
+                if (map && draw) {
+                    // Extract the GeoJSON data from the command
+                    const geoJsonString = command.substring(16).trim();
+                    let geoJsonData;
+
+                    try {
+                        geoJsonData = JSON.parse(geoJsonString);
+                    } catch (error) {
+                        console.error("Invalid GeoJSON data:", error);
+                        command_from_page_to_bot("message:Invalid GeoJSON data provided for drawing.");
+                        return;
+                    }
+
+                    // Validate GeoJSON structure
+                    if (geoJsonData.type !== 'FeatureCollection' || !Array.isArray(geoJsonData.features)) {
+                        console.error("Invalid GeoJSON structure.");
+                        command_from_page_to_bot("message:Invalid GeoJSON structure.");
+                        return;
+                    }
+
+                    // Add the GeoJSON data to Mapbox Draw
+                    try {
+                        draw.add(geoJsonData);
+                        command_from_page_to_bot("draw:drawn:" + JSON.stringify(geoJsonData));
+                        // Calculate bounds from GeoJSON features
+                        const coordinates = geoJsonData.features.flatMap(feature => {
+                            if (feature.geometry.type === "Polygon") {
+                                return feature.geometry.coordinates.flat(Infinity);
+                            } else if (feature.geometry.type === "MultiPolygon") {
+                                return feature.geometry.coordinates.flat(2);
+                            }
+                            return [];
+                        });
+
+                        if (coordinates.length > 0) {
+                            const lons = coordinates.filter((_, i) => i % 2 === 0);
+                            const lats = coordinates.filter((_, i) => i % 2 === 1);
+
+                            const bounds = [
+                                [Math.min(...lons), Math.min(...lats)], // Southwest corner
+                                [Math.max(...lons), Math.max(...lats)]  // Northeast corner
+                            ];
+
+                            // Fit the map to the bounds
+                            map.fitBounds(bounds, { padding: 40 }); // Add padding for better visibility
+                        } else {
+                            console.error("No valid coordinates found in GeoJSON data.");
+                            command_from_page_to_bot("message:No valid coordinates found in GeoJSON data.");
+                        }
+                    } catch (error) {
+                        console.error("Error adding GeoJSON to map:", error);
+                        command_from_page_to_bot("message:Error adding GeoJSON data to the map.");
+                    }
+                } else {
+                    command_from_page_to_bot("message:Map or draw instance is not initialized.");
+                }
+            }
+            if (command.startsWith("map:drawBbox:")) {
+                if (map && draw) {
+                    const geoJsonString = command.substring(13).trim();
+                    let geoJsonData;
+                    let minLon, minLat, maxLon, maxLat;
+
+                    try {
+                        geoJsonData = JSON.parse(geoJsonString);
+
+                        // Validate bbox data
+                        if (!Array.isArray(geoJsonData) || geoJsonData.length !== 4) {
+                            throw new Error("BBox data must be an array with exactly 4 elements [minLon, minLat, maxLon, maxLat].");
+                        }
+
+                        [minLon, minLat, maxLon, maxLat] = geoJsonData;
+
+                        if (
+                            typeof minLon !== "number" ||
+                            typeof minLat !== "number" ||
+                            typeof maxLon !== "number" ||
+                            typeof maxLat !== "number"
+                        ) {
+                            throw new Error("All bbox coordinates must be numbers.");
+                        }
+                    } catch (error) {
+                        console.error("Invalid bbox data:", error.message);
+                        command_from_page_to_bot("message:Invalid bbox data provided for drawing.");
+                        return;
+                    }
+
+                    // Wait for the map style to load before adding the layer
+                    map.on('style.load', function () {
+                        try {
+                            // Create a bbox as a GeoJSON Polygon
+                            const bboxGeoJson = {
+                                type: "FeatureCollection",
+                                features: [
+                                    {
+                                        type: "Feature",
+                                        properties: {}, // Style properties are managed via the Mapbox layer
+                                        geometry: {
+                                            type: "Polygon",
+                                            coordinates: [[
+                                                [minLon, minLat], // Bottom-left
+                                                [minLon, maxLat], // Top-left
+                                                [maxLon, maxLat], // Top-right
+                                                [maxLon, minLat], // Bottom-right
+                                                [minLon, minLat]  // Close the polygon
+                                            ]]
+                                        }
+                                    }
+                                ]
+                            };
+
+                            // Set the style for the drawn polygon with updated colors
+                            map.addLayer({
+                                id: "bbox-layer", // Layer ID
+                                type: "fill",
+                                source: {
+                                    type: "geojson",
+                                    data: bboxGeoJson // No "id" here
+                                },
+                                paint: {
+                                    "fill-color": "#0000FF", // Blue fill color
+                                    "fill-opacity": 0.1,     // 50% Transparency
+                                }
+                            });
+
+                            command_from_page_to_bot("draw:bboxdrawn:" + JSON.stringify(bboxGeoJson));
+
+                        } catch (error) {
+                            console.error("Error adding GeoJSON to map:", error.message);
+                            command_from_page_to_bot("message:Error adding bbox GeoJSON to the map.");
+                        }
+                    });
+
+                } else {
+                    command_from_page_to_bot("message:Map or draw instance is not initialized.");
+                }
+            }
+
+
+
+
+            if (command == 'map:close') { // Add close_map logic
+                if (map) {
+                    // Remove geocoder search box
+                    const searchBar = document.getElementById('search-bar');
+                    if (searchBar) {
+                        searchBar.innerHTML = ''; // Clear the search bar content
+                    }
+                    // Remove all features and controls from the map
+                    if (draw) { draw.deleteAll(); } // Clears all drawn features if Mapbox Draw is used
+                    map.remove(); // Removes the map instance
+                    map = null; // Clear the map instance
+                    // Reinitialize the map container
+                    let mapElement = document.getElementById('map');
+
+
+                    if (mapElement) {
+                        mapElement.remove();
+                    }
+                    document.body.classList.remove('fullscreen')
+                    command_from_page_to_bot("map:closed");
+                } else {
+                    command_from_page_to_bot("message:Map is not initialized");
+                }
+            }
+
+            else if (command.startsWith("map:moveto:")) {
+                const locationString = command.substring(11).trim(); // Extract location name from command
+                const accessToken = mapboxgl.accessToken;
+
+                // Construct the Geocoding API URL
+                const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(locationString)}.json?access_token=${accessToken}&limit=1`;
+
+                // Fetch geolocation data from the Mapbox Geocoding API
+                fetch(geocodeUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.features && data.features.length > 0) {
+                            const coordinates = data.features[0].center; // [lng, lat]
+                            const placeName = data.features[0].place_name;
+
+                            // Move the map to the location
+                            map.flyTo({
+                                center: coordinates,
+                                zoom: 10
+                            });
+
+                            // Add a marker at the location
+                            new mapboxgl.Marker()
+                                .setLngLat(coordinates)
+                                .setPopup(new mapboxgl.Popup().setText(placeName)) // Add popup with location name
+                                .addTo(map);
+
+                            command_from_page_to_bot(`location:moved-to:${placeName}`);
+                        } else {
+                            command_from_page_to_bot("location:not-found");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching location:", error);
+                        command_from_page_to_bot("location:error-not-found");
+                    });
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>
