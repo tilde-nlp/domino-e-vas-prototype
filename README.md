@@ -13,3 +13,5 @@ The scenario for the VAS prototype chatbot has been designed and implemented usi
 The implemented VA Scenario has been exported in textual format and stored in this source code repositories, enabling change tracking. Additionally, the exported VA Scenario can be imported into a VA platform deployed in a different environment, facilitating the migration of VA Scenarios across environments.
 
 The VAS prototype has been successfully implemented and deployed in a local testing environment (https://va.tilde.com/api/prodk8sbotdomin0/media/staging/uas.html), where it is ready for end-user testing to gather feedback for further improvements. 
+
+To facilitate user testing, several example conversations are created and included in the folder [ExampleConversations](ExampleConversations/README.md), showcasing the prototype’s capabilities and serving as inspiration for end-users during their evaluation.
